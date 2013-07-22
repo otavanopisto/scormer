@@ -20,5 +20,13 @@
 
 % end
 <script src="/static/scorm.js"></script>
+
+% if package:
+% for i, obj in enumerate(package.objs):
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.id".format(i)}}'] = '{{obj}}';</script>
+% end
+<script>window.API_1484_11.data['cmi.objectives._count'] = '{{len(package.objs)}}';</script>
+% end
+
 </body>
 </html>

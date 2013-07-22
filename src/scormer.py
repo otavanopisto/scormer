@@ -23,6 +23,7 @@ def parse_package(scorm_dir):
     package = Bunch()
     tree = ET.parse(packagedir + '/' + scorm_dir + '/imsmanifest.xml')
     ns = "{http://www.imsglobal.org/xsd/imscp_v1p1}"
+    imsss = "{http://www.imsglobal.org/xsd/imsss}"
     resources = {}
     for element in tree.findall(".//{0}resource".format(ns)):
         print(element)
@@ -38,6 +39,11 @@ def parse_package(scorm_dir):
         leaf.url += resources[element.get('identifierref')]
         leaf.url += element.get('parameters', "")
         package.leaves.append(leaf)
+    package.objs = []
+    for element in tree.findall(".//{0}objective".format(imsss)):
+        package.objs.append(element.get("objectiveID"))
+    for element in tree.findall(".//{0}primaryObjective".format(imsss)):
+        package.objs.append(element.get("objectiveID"))
     return package
 
 @route("/")

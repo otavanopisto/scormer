@@ -52,9 +52,43 @@
 		return "true";
 	};
 	
+	ScormApi.prototype.IsAddNewElement = function IsAddNewElement(key) {
+		if (/cmi\.objectives\.[0-9]+\.id/.exec(key) ||
+		  /cmi\.interactions\.[0-9]+\.id/.exec(key) ||
+		  /cmi\.interactions\.[0-9]+\.objectives\.[0-9]+\.id/.exec(key) ||
+		  /cmi\.comments_from_learner\.[0-9]+\.(?:comment|location|timestamp)/.exec(key)) {
+			console.log("IsAddNewElement('" + key + "') == true");
+			return true;
+		} else {
+			console.log("IsAddNewElement('" + key + "') == false");
+			return false;
+		}
+	};
+	
+	ScormApi.prototype.AddNewElement = function AddNewElement(key, value) {
+		console.log("AddNewElement('" + key + "','" + value + "')")
+		var val;
+		this.data[key] = value;
+		if (/cmi\.objectives\.[0-9]+\.id/.exec(key)) {
+			this.data["cmi.objectives._count"]++;
+		}
+		if (/cmi\.interactions\.[0-9]+\.id/.exec(key)) {
+			this.data["cmi.interactions._count"]++;
+		}
+		if (val = /cmi\.interactions\.([0-9]+)\.objectives\.[0-9]+\.id/.exec(key)) {
+			if (!("cmi.interactions." + val[1] + ".objectives._count" in this.data)) {
+				this.data["cmi.interactions." + val[1] + ".objectives._count"] = 0;
+			} 
+			this.data["cmi.interactions." + val[1] + ".objectives._count"]++;
+		}
+		if (/cmi\.comments_from_learner\.[0-9]+\..*/.exec(key)) {
+			this.data["cmi.comments_from_learner._count"]++;
+		}
+	}
+	
 	ScormApi.prototype.GetValue = function GetValue(param) {
-		console.log("GetValue('" + param + "')")
 		if (param in this.data) {
+			console.log("GetValue('" + param + "') == '" + this.data[param] + "'")
 			this.error = "0";
 			return this.data[param];
 		} else {
@@ -65,7 +99,13 @@
 	
 	ScormApi.prototype.SetValue = function SetValue(key, value) {
 		console.log("SetValue('" + key + "','" + value + "')")
-		if (key in this.data) {
+		
+		if (this.IsAddNewElement(key)) {
+			this.AddNewElement(key, value);
+		}
+		
+		// if (key in this.data) {
+		if (true) {
 			this.error = "0";
 			this.data[key] = value;
 			return "true";
