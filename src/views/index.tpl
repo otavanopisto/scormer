@@ -16,6 +16,7 @@
 <a href="{{leaf.url}}" target="sco">{{leaf.path}}</a> 
 % end
 
+<br />
 <iframe id="sco" src="about:blank" name="sco" width="800" height="1200"></iframe>
 
 % end
@@ -24,6 +25,14 @@
 % if package:
 % for i, obj in enumerate(package.objs):
 <script>window.API_1484_11.data['{{"cmi.objectives.{0}.id".format(i)}}'] = '{{obj}}';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.score.min".format(i)}}'] = '0';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.score.max".format(i)}}'] = '1';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.score.scaled".format(i)}}'] = '0';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.score.raw".format(i)}}'] = '0';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.success_status".format(i)}}'] = 'unknown';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.completion_status".format(i)}}'] = 'unknown';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.progress_measure".format(i)}}'] = '0';</script>
+<script>window.API_1484_11.data['{{"cmi.objectives.{0}.description".format(i)}}'] = '';</script>
 % end
 <script>window.API_1484_11.data['cmi.objectives._count'] = '{{len(package.objs)}}';</script>
 % end
